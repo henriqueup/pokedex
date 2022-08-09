@@ -1,0 +1,9 @@
+.root {
+  background-color: lightgray;
+}
+
+.filtersContainer {
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+  padding: 8px 16px;
+}
