@@ -21,6 +21,8 @@ const Select = ({ label, options, placeholder, handleChange }: Props) => {
   const selectElement = useRef<HTMLSelectElement>(null);
   const [value, setValue] = useState("");
 
+  const shrinkLabel = value || placeholder;
+
   const handleOwnChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     setValue(event.currentTarget.value);
     handleChange(event.currentTarget.value);
@@ -36,8 +38,8 @@ const Select = ({ label, options, placeholder, handleChange }: Props) => {
   };
 
   return (
-    <fieldset class={style.fieldset}>
-      {(placeholder || value) && <legend>{label}</legend>}
+    <fieldset class={style.fieldset} style={{ marginTop: !shrinkLabel ? "14px" : undefined }}>
+      {shrinkLabel && <legend>{label}</legend>}
       <div class={style.fieldsetBody}>
         <select
           class={style.select}
