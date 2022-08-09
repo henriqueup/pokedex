@@ -11,6 +11,9 @@ type PokedexFilters = {
 };
 
 const Pokedex = () => {
+  //TODO:
+  //start using PokeAPI: https://pokeapi.co/
+  //https://pokeapi.co/api/v2/pokemon/weedle
   const [pokemon, setPokemon] = useState<Pokemon[]>(Pokemon);
   const [filters, setFilters] = useState<PokedexFilters>({ type: undefined });
 
