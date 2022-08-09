@@ -14,11 +14,18 @@ export const useOutsideEvent = ({ ref, eventName, callback }: Props): void => {
         callback();
       }
     };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        callback();
+      }
+    };
 
     document.addEventListener(eventName, handleOutsideClick);
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
       document.removeEventListener(eventName, handleOutsideClick);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [ref, eventName, callback]);
 };

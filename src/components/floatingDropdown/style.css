@@ -5,6 +5,11 @@
   padding: 0;
 }
 
+.options:focus-visible,
+.option:focus-visible {
+  outline: none;
+}
+
 .option {
   background-color: black;
   width: 100%;

@@ -1,8 +1,9 @@
 import { h } from "preact";
 import { ChangeEvent } from "preact/compat";
-import { useCallback, useState } from "preact/hooks";
+import { useCallback, useRef, useState } from "preact/hooks";
 import ChevronDown from "../../shared/icons/ChevronDown";
 import X from "../../shared/icons/X";
+import { handleEnterAsClick } from "../../shared/utils/nodeUtils";
 import FloatingDropdown from "../floatingDropdown";
 import style from "./style.css";
 
@@ -24,12 +25,13 @@ const Select = ({ label, options, placeholder, handleChange }: Props) => {
   const [filterValue, setFilterValue] = useState("");
   const [filteredOptions, setFilteredOptions] = useState(options);
 
+  const floatingDropdownRef = useRef<HTMLUListElement>(null);
   const shrinkLabel = value || placeholder;
 
-  const handleOwnChange = (event: MouseEvent, key: string | number, newValue: string) => {
-    setValue(newValue);
-    setFilterValue(newValue);
-    handleChange(key);
+  const handleOwnChange = (event: Event, option: IOption) => {
+    setValue(option.value);
+    setFilterValue(option.value);
+    handleChange(option.key);
     handleCloseOptions();
     event.stopPropagation();
   };
@@ -43,7 +45,14 @@ const Select = ({ label, options, placeholder, handleChange }: Props) => {
     );
   };
 
-  const handleClear = (event: MouseEvent) => {
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === "ArrowDown") {
+      setOptionsIsOpen(true);
+      floatingDropdownRef.current?.focus();
+    }
+  };
+
+  const handleClear = (event: Event) => {
     setValue("");
     setFilterValue("");
     handleChange("");
@@ -63,6 +72,7 @@ const Select = ({ label, options, placeholder, handleChange }: Props) => {
       class={style.fieldset}
       style={{ marginTop: shrinkLabel ? undefined : "6px" }}
       onClick={handleFieldsetClick}
+      onKeyDown={handleKeyDown}
     >
       {shrinkLabel && <legend>{label}</legend>}
       <div
@@ -74,13 +84,18 @@ const Select = ({ label, options, placeholder, handleChange }: Props) => {
           class={style.input}
           value={filterValue}
           onInput={handleChangeInput}
-          tabIndex={1}
+          tabIndex={0}
         />
-        <div class={style.icon}>
+        <div class={style.icon} onKeyDown={handleEnterAsClick(handleFieldsetClick)} tabIndex={0}>
           <ChevronDown width={16} height={16} fill="none" />
         </div>
         {value && (
-          <div class={style.icon} onClick={handleClear}>
+          <div
+            class={style.icon}
+            onClick={handleClear}
+            onKeyDown={handleEnterAsClick(handleClear)}
+            tabIndex={0}
+          >
             <X width={16} height={16} />
           </div>
         )}
@@ -88,8 +103,9 @@ const Select = ({ label, options, placeholder, handleChange }: Props) => {
       <FloatingDropdown
         open={optionsIsOpen}
         options={filteredOptions}
-        handleClickOption={handleOwnChange}
+        handleSetOption={handleOwnChange}
         handleClose={handleCloseOptions}
+        ref={floatingDropdownRef}
       />
     </fieldset>
   );
