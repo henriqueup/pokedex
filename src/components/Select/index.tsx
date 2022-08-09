@@ -38,9 +38,12 @@ const Select = ({ label, options, placeholder, handleChange }: Props) => {
   };
 
   return (
-    <fieldset class={style.fieldset} style={{ marginTop: !shrinkLabel ? "14px" : undefined }}>
+    <fieldset class={style.fieldset} style={{ marginTop: shrinkLabel ? undefined : "6px" }}>
       {shrinkLabel && <legend>{label}</legend>}
-      <div class={style.fieldsetBody}>
+      <div
+        class={style.fieldsetBody}
+        style={{ paddingTop: shrinkLabel ? undefined : "8px", paddingBottom: "8px" }}
+      >
         <select
           class={style.select}
           onChange={handleOwnChange}
