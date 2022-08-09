@@ -12,6 +12,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+textarea:focus,
+input:focus {
+  outline: none;
+}
+
 legend {
   font-size: 0.825rem;
 }

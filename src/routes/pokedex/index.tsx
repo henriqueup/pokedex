@@ -7,20 +7,18 @@ import { types } from "../../models/Pokemon/Type";
 import style from "./style.css";
 
 type PokedexFilters = {
-  type: string | undefined;
+  type: number | undefined;
 };
 
 const Pokedex = () => {
   const [pokemon, setPokemon] = useState<Pokemon[]>(Pokemon);
   const [filters, setFilters] = useState<PokedexFilters>({ type: undefined });
 
-  const typeOptions = types.map(type => ({ value: type.id.toString(), label: type.name }));
+  const typeOptions = types.map(type => ({ key: type.id, value: type.name }));
 
   useEffect(() => {
     if (filters.type) {
-      setPokemon(
-        Pokemon.filter(item => item.types.find(type => filters.type === type.id.toString()))
-      );
+      setPokemon(Pokemon.filter(item => item.types.find(type => filters.type === type.id)));
     } else {
       setPokemon(Pokemon);
     }
@@ -33,7 +31,7 @@ const Pokedex = () => {
         <Select
           label="Types"
           options={typeOptions}
-          handleChange={(value: string) => setFilters({ ...filters, type: value })}
+          handleChange={key => setFilters({ ...filters, type: key as number })}
         />
       </div>
       <PokedexTable pokemon={pokemon} />

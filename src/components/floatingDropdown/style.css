@@ -1,0 +1,17 @@
+.options {
+  list-style-type: none;
+  border-radius: 4px;
+  margin: 0;
+  padding: 0;
+}
+
+.option {
+  background-color: black;
+  width: 100%;
+  color: antiquewhite;
+  cursor: pointer;
+}
+
+.option:hover {
+  background-color: rgb(38, 38, 38);
+}
