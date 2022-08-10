@@ -4,6 +4,7 @@ import PokedexTable from "../../components/PokedexTable";
 import Select from "../../components/Select";
 import { Pokemon } from "../../models/Pokemon/Pokemon";
 import { types } from "../../models/Pokemon/Type";
+import manager from "./manager";
 import style from "./style.css";
 
 type PokedexFilters = {
@@ -18,6 +19,10 @@ const Pokedex = () => {
   const [filters, setFilters] = useState<PokedexFilters>({ type: undefined });
 
   const typeOptions = types.map(type => ({ key: type.id, value: type.name }));
+
+  useEffect(() => {
+    manager.getPokemon();
+  }, []);
 
   useEffect(() => {
     if (filters.type) {
