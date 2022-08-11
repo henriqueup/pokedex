@@ -1,36 +1,39 @@
 import { h } from "preact";
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useMemo, useState } from "preact/hooks";
 import PokedexTable from "../../components/PokedexTable";
 import Select from "../../components/Select";
 import { Pokemon } from "../../models/Pokemon/Pokemon";
-import { types } from "../../models/Pokemon/Type";
+import { Type } from "../../models/Pokemon/Type";
 import manager from "./manager";
 import style from "./style.css";
 
 type PokedexFilters = {
-  type: number | undefined;
+  type: string | undefined;
 };
 
 const Pokedex = () => {
-  //TODO:
-  //start using PokeAPI: https://pokeapi.co/
-  //https://pokeapi.co/api/v2/pokemon/weedle
-  const [pokemon, setPokemon] = useState<Pokemon[]>(Pokemon);
+  const [pokemon, setPokemon] = useState<Pokemon[]>([]);
   const [filters, setFilters] = useState<PokedexFilters>({ type: undefined });
 
-  const typeOptions = types.map(type => ({ key: type.id, value: type.name }));
+  const filteredPokemon = useMemo(() => {
+    if (filters.type) {
+      return pokemon.filter(item => item.types.find(type => filters.type === type.id));
+    }
+
+    return pokemon;
+  }, [filters, pokemon]);
 
   useEffect(() => {
-    manager.getPokemon();
+    const getPokemon = async () => {
+      setPokemon(await manager.getPokemon());
+    };
+
+    getPokemon();
   }, []);
 
-  useEffect(() => {
-    if (filters.type) {
-      setPokemon(Pokemon.filter(item => item.types.find(type => filters.type === type.id)));
-    } else {
-      setPokemon(Pokemon);
-    }
-  }, [filters]);
+  const typeOptions = useMemo(() => {
+    return Type.types.map(type => ({ key: type.id, value: type.name }));
+  }, []);
 
   return (
     <div class={style.root}>
@@ -39,10 +42,10 @@ const Pokedex = () => {
         <Select
           label="Types"
           options={typeOptions}
-          handleChange={key => setFilters({ ...filters, type: key as number })}
+          handleChange={key => setFilters({ ...filters, type: key as string })}
         />
       </div>
-      <PokedexTable pokemon={pokemon} />
+      <PokedexTable pokemon={filteredPokemon} />
     </div>
   );
 };

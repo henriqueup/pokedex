@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { generateSpriteUrl, Pokemon } from "../../models/Pokemon/Pokemon";
+import { Pokemon } from "../../models/Pokemon/Pokemon";
 import style from "./style.css";
 import TypesLabel from "./TypesLabel";
 
@@ -18,7 +18,7 @@ const TableRow = ({ pokemon }: Props) => {
         <TypesLabel types={pokemon.types} />
       </div>
       <div class={style.cell}>
-        <img src={generateSpriteUrl(pokemon.id)} width={40} height={40} alt={pokemon.name} />
+        <img src={pokemon.generateSpriteUrl()} width={64} height={64} alt={pokemon.name} />
       </div>
     </div>
   );

@@ -1,48 +1,43 @@
-import { Type, types } from "./Type";
+import { capitalize } from "../../shared/utils/stringUtils";
+import { Type, TypesFromApi } from "./Type";
 
-export type Pokemon = {
+export type PokemonFromApi = {
+  id: number;
+  name: string;
+  types: TypesFromApi[];
+};
+
+export class Pokemon {
   id: number;
   name: string;
   types: Type[];
-};
 
-const spriteBaseUrl = "https://assets.pokemon.com/assets/cms2/img/pokedex/full/{id}.png";
+  static spriteBaseUrl = "https://assets.pokemon.com/assets/cms2/img/pokedex/full/{id}.png";
 
-const zeroFill = (id: number) => {
-  const baseFill = "000";
-  const idString = id.toString();
-
-  return baseFill.substring(idString.length) + idString;
-};
-
-export const generateSpriteUrl = (id: number): string => {
-  return spriteBaseUrl.replace("{id}", zeroFill(id));
-};
-
-export const Pokemon: Pokemon[] = [
-  {
-    id: 1,
-    name: "Bulbasaur",
-    types: [types[0]]
-  },
-  {
-    id: 4,
-    name: "Charmander",
-    types: [types[1]]
-  },
-  {
-    id: 7,
-    name: "Squirtle",
-    types: [types[2]]
-  },
-  {
-    id: 25,
-    name: "Pikachu",
-    types: [types[3]]
-  },
-  {
-    id: 13,
-    name: "Weedle",
-    types: [types[4], types[5]]
+  private constructor(id: number, name: string, types: Type[]) {
+    this.id = id;
+    this.name = name;
+    this.types = types;
   }
-];
+
+  static mapFromApi(apiObject: PokemonFromApi): Pokemon {
+    const types = apiObject.types.map(type => new Type(type.type.name));
+
+    return new Pokemon(apiObject.id, capitalize(apiObject.name), types);
+  }
+
+  static mapNFromApi(apiObjects: PokemonFromApi[]): Pokemon[] {
+    return apiObjects.map(obj => Pokemon.mapFromApi(obj));
+  }
+
+  private zeroFill() {
+    const baseFill = "000";
+    const idString = this.id.toString();
+
+    return baseFill.substring(idString.length) + idString;
+  }
+
+  generateSpriteUrl(): string {
+    return Pokemon.spriteBaseUrl.replace("{id}", this.zeroFill());
+  }
+}

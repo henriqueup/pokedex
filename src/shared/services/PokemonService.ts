@@ -1,3 +1,5 @@
+import { PokemonFromApi } from "../../models/Pokemon/Pokemon";
+
 class PokemonService {
   baseUrl: string;
 
@@ -5,8 +7,14 @@ class PokemonService {
     this.baseUrl = "https://pokeapi.co/api/v2";
   }
 
-  async getPokemon(id: number) {
-    return fetch(`${this.baseUrl}/pokemon/${id}`);
+  async getPokemon(id: number): Promise<PokemonFromApi> {
+    return fetch(`${this.baseUrl}/pokemon/${id}`).then(response => {
+      if (!response.ok) {
+        console.error(response);
+      }
+
+      return response.json();
+    });
   }
 }
 
