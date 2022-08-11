@@ -6,7 +6,7 @@ class PokedexManager {
   maxId: number;
 
   constructor() {
-    this.maxId = 50;
+    this.maxId = 100;
   }
 
   async getPokemon(): Promise<Pokemon[]> {

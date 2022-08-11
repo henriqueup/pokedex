@@ -49,6 +49,7 @@ const Select = ({ label, options, placeholder, handleChange }: Props) => {
     if (event.key === "ArrowDown") {
       setOptionsIsOpen(true);
       floatingDropdownRef.current?.focus();
+      event.preventDefault();
     }
   };
 
