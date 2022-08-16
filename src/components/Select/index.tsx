@@ -26,7 +26,7 @@ const Select = ({ label, options, placeholder, handleChange }: Props) => {
   const [filteredOptions, setFilteredOptions] = useState(options);
 
   const floatingDropdownRef = useRef<HTMLUListElement>(null);
-  const shrinkLabel = value || placeholder;
+  const shrinkLabel = value || filterValue || placeholder;
 
   const handleOwnChange = (event: Event, option: IOption) => {
     setValue(option.value);
@@ -57,6 +57,7 @@ const Select = ({ label, options, placeholder, handleChange }: Props) => {
     setValue("");
     setFilterValue("");
     handleChange("");
+    setFilteredOptions(options);
     event.stopPropagation();
   };
 
